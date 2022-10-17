@@ -1,303 +1,442 @@
-/*
-Template Name: Effacy - Creative One Page Template
-Author: ThemeBite
-Author URI: http://themebite.com/
-Version: 1.0
-Developed and Designed By: ThemeBite
-*/
-/*
-====================================
-[ JS TABLE OF CONTENT ]
-------------------------------------
-    1.0 - Parallax Effect
-    2.0 - PreLoader
-    3.0 - Sticky Menu
-    4.0 - Text-Rotator
-    5.0 - jQuery Smooth Scroll
-    6.0 - Responsive Menu
-    7.0 - Scroll Spy
-    8.0 - Testimonial Carousel
-    9.0 - Partners Carousel
-    10  - Blog Post Carousel
-    11  - Photo Gallery
-    12  - jQuery Light Box 
-    13  - Counter Section 
-    14  - Goolge Map 
--------------------------------------
-[ END JS TABLE OF CONTENT ]
-=====================================
-*/
-$(window).load(function() {
+ AOS.init({
+ 	duration: 800,
+ 	easing: 'slide'
+ });
 
-    "use strict";
+(function($) {
 
-    // Parallax Effect
-    (function() {
+	"use strict";
 
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+	$(window).stellar({
+    responsive: true,
+    parallaxBackgrounds: true,
+    parallaxElements: true,
+    horizontalScrolling: false,
+    hideDistantElements: false,
+    scrollProperty: 'scroll'
+  });
 
-        } else {
-            $(window).stellar({
-                horizontalScrolling: false,
-                responsive: true,
-            });
-        }
 
-    }());
+	var fullHeight = function() {
 
+		$('.js-fullheight').css('height', $(window).height());
+		$(window).resize(function(){
+			$('.js-fullheight').css('height', $(window).height());
+		});
+
+	};
+	fullHeight();
+
+	// loader
+	var loader = function() {
+		setTimeout(function() { 
+			if($('#ftco-loader').length > 0) {
+				$('#ftco-loader').removeClass('show');
+			}
+		}, 1);
+	};
+	loader();
+
+	// Scrollax
+   $.Scrollax();
+
+
+
+   // Burger Menu
+	var burgerMenu = function() {
+
+		$('body').on('click', '.js-fh5co-nav-toggle', function(event){
+
+			event.preventDefault();
+
+			if ( $('#ftco-nav').is(':visible') ) {
+				$(this).removeClass('active');
+			} else {
+				$(this).addClass('active');	
+			}
+
+			
+			
+		});
+
+	};
+	burgerMenu();
+
+
+	var onePageClick = function() {
+
+
+		$(document).on('click', '#ftco-nav a[href^="#"]', function (event) {
+	    event.preventDefault();
+
+	    var href = $.attr(this, 'href');
+
+	    $('html, body').animate({
+	        scrollTop: $($.attr(this, 'href')).offset().top - 70
+	    }, 500, function() {
+	    	// window.location.hash = href;
+	    });
+		});
+
+	};
+
+	onePageClick();
+	
+
+	var carousel = function() {
+		$('.home-slider').owlCarousel({
+	    loop:true,
+	    autoplay: true,
+	    margin:0,
+	    animateOut: 'fadeOut',
+	    animateIn: 'fadeIn',
+	    nav:false,
+	    autoplayHoverPause: false,
+	    items: 1,
+	    navText : ["<span class='ion-md-arrow-back'></span>","<span class='ion-chevron-right'></span>"],
+	    responsive:{
+	      0:{
+	        items:1
+	      },
+	      600:{
+	        items:1
+	      },
+	      1000:{
+	        items:1
+	      }
+	    }
+		});
+	};
+	carousel();
+
+	$('nav .dropdown').hover(function(){
+		var $this = $(this);
+		// 	 timer;
+		// clearTimeout(timer);
+		$this.addClass('show');
+		$this.find('> a').attr('aria-expanded', true);
+		// $this.find('.dropdown-menu').addClass('animated-fast fadeInUp show');
+		$this.find('.dropdown-menu').addClass('show');
+	}, function(){
+		var $this = $(this);
+			// timer;
+		// timer = setTimeout(function(){
+			$this.removeClass('show');
+			$this.find('> a').attr('aria-expanded', false);
+			// $this.find('.dropdown-menu').removeClass('animated-fast fadeInUp show');
+			$this.find('.dropdown-menu').removeClass('show');
+		// }, 100);
+	});
+
+
+	$('#dropdown04').on('show.bs.dropdown', function () {
+	  console.log('show');
+	});
+
+	// scroll
+	var scrollWindow = function() {
+		$(window).scroll(function(){
+			var $w = $(this),
+					st = $w.scrollTop(),
+					navbar = $('.ftco_navbar'),
+					sd = $('.js-scroll-wrap');
+
+			if (st > 150) {
+				if ( !navbar.hasClass('scrolled') ) {
+					navbar.addClass('scrolled');	
+				}
+			} 
+			if (st < 150) {
+				if ( navbar.hasClass('scrolled') ) {
+					navbar.removeClass('scrolled sleep');
+				}
+			} 
+			if ( st > 350 ) {
+				if ( !navbar.hasClass('awake') ) {
+					navbar.addClass('awake');	
+				}
+				
+				if(sd.length > 0) {
+					sd.addClass('sleep');
+				}
+			}
+			if ( st < 350 ) {
+				if ( navbar.hasClass('awake') ) {
+					navbar.removeClass('awake');
+					navbar.addClass('sleep');
+				}
+				if(sd.length > 0) {
+					sd.removeClass('sleep');
+				}
+			}
+		});
+	};
+	scrollWindow();
+
+	
+
+	var counter = function() {
+		
+		$('#section-counter, .hero-wrap, .ftco-counter, .ftco-about').waypoint( function( direction ) {
+
+			if( direction === 'down' && !$(this.element).hasClass('ftco-animated') ) {
+
+				var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',')
+				$('.number').each(function(){
+					var $this = $(this),
+						num = $this.data('number');
+						console.log(num);
+					$this.animateNumber(
+					  {
+					    number: num,
+					    numberStep: comma_separator_number_step
+					  }, 7000
+					);
+				});
+				
+			}
+
+		} , { offset: '95%' } );
+
+	}
+	counter();
+
+
+	var contentWayPoint = function() {
+		var i = 0;
+		$('.ftco-animate').waypoint( function( direction ) {
+
+			if( direction === 'down' && !$(this.element).hasClass('ftco-animated') ) {
+				
+				i++;
+
+				$(this.element).addClass('item-animate');
+				setTimeout(function(){
+
+					$('body .ftco-animate.item-animate').each(function(k){
+						var el = $(this);
+						setTimeout( function () {
+							var effect = el.data('animate-effect');
+							if ( effect === 'fadeIn') {
+								el.addClass('fadeIn ftco-animated');
+							} else if ( effect === 'fadeInLeft') {
+								el.addClass('fadeInLeft ftco-animated');
+							} else if ( effect === 'fadeInRight') {
+								el.addClass('fadeInRight ftco-animated');
+							} else {
+								el.addClass('fadeInUp ftco-animated');
+							}
+							el.removeClass('item-animate');
+						},  k * 50, 'easeInOutExpo' );
+					});
+					
+				}, 100);
+				
+			}
+
+		} , { offset: '95%' } );
+	};
+	contentWayPoint();
+
+	// magnific popup
+	$('.image-popup').magnificPopup({
+    type: 'image',
+    closeOnContentClick: true,
+    closeBtnInside: false,
+    fixedContentPos: true,
+    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+     gallery: {
+      enabled: true,
+      navigateByImgClick: true,
+      preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+    },
+    image: {
+      verticalFit: true
+    },
+    zoom: {
+      enabled: true,
+      duration: 300 // don't foget to change the duration also in CSS
+    }
+  });
+
+  $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+    disableOn: 700,
+    type: 'iframe',
+    mainClass: 'mfp-fade',
+    removalDelay: 160,
+    preloader: false,
+
+    fixedContentPos: false
+  });
+
+
+  var goHere = function() {
+
+		$('.mouse-icon').on('click', function(event){
+			
+			event.preventDefault();
+
+			$('html,body').animate({
+				scrollTop: $('.goto-here').offset().top
+			}, 500, 'easeInOutExpo');
+			
+			return false;
+		});
+	};
+	goHere();
+
+	// $("#myScrollspy").scrollspy({ offset: -75 });
+
+
+
+var TxtRotate = function(el, toRotate, period) {
+  this.toRotate = toRotate;
+  this.el = el;
+  this.loopNum = 0;
+  this.period = parseInt(period, 10) || 2000;
+  this.txt = '';
+  this.tick();
+  this.isDeleting = false;
+};
+
+TxtRotate.prototype.tick = function() {
+  var i = this.loopNum % this.toRotate.length;
+  var fullTxt = this.toRotate[i];
+
+  if (this.isDeleting) {
+    this.txt = fullTxt.substring(0, this.txt.length - 1);
+  } else {
+    this.txt = fullTxt.substring(0, this.txt.length + 1);
+  }
+
+  this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+  var that = this;
+  var delta = 300 - Math.random() * 100;
+
+  if (this.isDeleting) { delta /= 2; }
+
+  if (!this.isDeleting && this.txt === fullTxt) {
+    delta = this.period;
+    this.isDeleting = true;
+  } else if (this.isDeleting && this.txt === '') {
+    this.isDeleting = false;
+    this.loopNum++;
+    delta = 500;
+  }
+
+  setTimeout(function() {
+    that.tick();
+  }, delta);
+};
+
+window.onload = function() {
+  var elements = document.getElementsByClassName('txt-rotate');
+  for (var i=0; i<elements.length; i++) {
+    var toRotate = elements[i].getAttribute('data-rotate');
+    var period = elements[i].getAttribute('data-period');
+    if (toRotate) {
+      new TxtRotate(elements[i], JSON.parse(toRotate), period);
+    }
+  }
+  // INJECT CSS
+  var css = document.createElement("style");
+  css.type = "text/css";
+  css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
+  document.body.appendChild(css);
+};
+
+
+})(jQuery);
+
+
+
+
+
+
+
+// this makes the height of each page equal to the height of the window
+// $('.page').css('height', $( window ).height());
+
+// scrollspy section
+(function($){
+  //variable that will hold the href attr of the links in the menu
+  var sections = [];
+  //variable that stores the id of the section
+  var id = false;
+  //variable for the selection of the anchors in the navbar
+  var $navbara = $('#navi a');
+  
+  $navbara.click(function(e){
+    //prevent the page from refreshing
+    e.preventDefault();
+    //set the top offset animation and speed
+    $('html, body').animate({
+      scrollTop: $($(this).attr('href')).offset().top - 180
+},500);
+    hash($(this).attr('href'));
+  });
+  
+  
+  
+  //select all the anchors in the navbar one after another
+  $navbara.each(function(){
+   // and adds them in the sections variable
+    sections.push($($(this).attr('href')));
+    
+  })
+  $(window).scroll(function(e){
+    // scrollTop retains the value of the scroll top with the reference at the middle of the page
+    var scrollTop = $(this).scrollTop() + ($(window).height()/2);
+    //cycle through the values in sections array
+    for (var i in sections) {
+      var section = sections[i];
+      //if scrollTop variable is bigger than the top offset of a section in the sections array then 
+      if (scrollTop > section.offset().top){
+        var scrolled_id = section.attr('id');
+      }
+    }
+    if (scrolled_id !== id) {
+      id = scrolled_id;
+      $($navbara).removeClass('current');
+      $('#navi a[href="#' + id + '"]').addClass('current'); 
+    }
+  })
+})(jQuery);
+
+hash = function(h){
+  if (history.pushState){
+    history.pushState(null, null, h);
+  }else{
+    location.hash = h;
+  }
+}
+
+
+$(function() {
+
+  $(".progress").each(function() {
+
+    var value = $(this).attr('data-value');
+    var left = $(this).find('.progress-left .progress-bar');
+    var right = $(this).find('.progress-right .progress-bar');
+
+    if (value > 0) {
+      if (value <= 50) {
+        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+      } else {
+        right.css('transform', 'rotate(180deg)')
+        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+      }
+    }
+
+  })
+
+  function percentageToDegrees(percentage) {
+
+    return percentage / 100 * 360
+
+  }
 
 });
 
-$(document).ready(function() {
-    // PreLoader
-    $("body").queryLoader2({
-        // Preloader options
-        backgroundColor: "#34495e",
-        barHeight: 2,
-        minimumTime: 1000,
-        fadeOutTime: 2000,
-        percentage: true,
-    });
-
-    // Sticky Menu
-    $(".header-area").sticky({
-        topSpacing: 0
-    });
-
-    // Text Rotator
-    if ($('#js-rotating').length > 0) {
-        $("#js-rotating").Morphext({
-            // The [in] animation type. Refer to Animate.css for a list of available animations.
-            animation: "lightSpeedIn",
-            // An array of phrases to rotate are created based on this separator. Change it if you wish to separate the phrases differently (e.g. So Simple | Very Doge | Much Wow | Such Cool).
-            separator: ",",
-            // The delay between the changing of each phrase in milliseconds.
-            speed: 6000,
-            complete: function() {
-                // Called after the entrance animation is executed.
-            }
-        });
-    }
-
-    // jQuery Smooth Scroll
-    $('.page-scroll').on('click', function(event) {
-        var $anchor = $(this),
-            headerH = '55';
-        $('html , body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top - headerH + "px",
-        }, 1200, 'easeInOutExpo');
-
-        event.preventDefault();
-    });
-
-    // Responsive Menu
-    $("ul.nav.navbar-nav li a").click(function() {
-        $(".navbar-collapse").removeClass("in");
-    });
-
-    // jQuery ScrollSpy
-    $('body').scrollspy({
-        target: '.navbar-collapse',
-        offset: 70
-    });
-
-    // Testimonial Carousel 
-    $("#testimonial-carousel").owlCarousel({
-        // Testimonial Carousel Settings
-        navigation: true, // Show next and prev buttons
-        navigationText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
-        slideSpeed: 1000,
-        paginationSpeed: 1000,
-        singleItem: true,
-        pagination: false,
-        autoPlay: true,
-        stopOnHover: true,
-    });
-
-
-    // Partners Carousel 
-    $("#partners-carousel").owlCarousel({
-        // Partners Carousel Settings
-        navigation: false,
-        pagination: false,
-        autoPlay: 3000, //Set AutoPlay to 3 seconds
-        items: 5,
-        itemsDesktop: [1199, 3],
-        itemsDesktopSmall: [979, 3],
-        stopOnHover: true,
-    });
-
-
-
-    // BLog Post Carousel 
-    $("#blog-post-carousel").owlCarousel({
-        // BLog Post Carousel Settings
-        navigation: false,
-        slideSpeed: 2000,
-        paginationSpeed: 1000,
-        singleItem: true,
-        pagination: true,
-        autoPlay: true,
-        stopOnHover: true,
-    });
-
-    // Portfolio Gallery
-
-    if ($('#grid').length > 0) {
-        // Initialize plugin
-        var $grid = $('#grid');
-        $(window).load(function() {
-            $grid.shuffle({
-                itemSelector: '.thumbnails' // The Child Item of the parent #grid
-            });
-        });
-
-        // Re-Shuffle the gallery
-        $('#filter li').on('click', function(e) {
-            e.preventDefault();
-
-            // Active class on li
-            $('#filter li').removeClass('active');
-            $(this).addClass('active');
-
-            // Filter item
-            var groupName = $(this).attr('data-group');
-
-            // Reshuffle item
-            $grid.shuffle('shuffle', groupName);
-        });
-    }
-
-    // Simple Light Box
-    var gallery = $('.thumbnails a').simpleLightbox({
-        navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
-        closeText: '<i class="fa fa-times"></i>',
-    });
-
-    // Counter JS
-    $('.our-awards-section').on('inview', function(event, visible, visiblePartX, visiblePartY) {
-        if (visible) {
-            $(this).find('.timer').each(function() {
-                var $this = $(this);
-                $({
-                    Counter: 0
-                }).animate({
-                    Counter: $this.text()
-                }, {
-                    duration: 3000,
-                    easing: 'swing',
-                    step: function() {
-                        $this.text(Math.ceil(this.Counter));
-                    }
-                });
-            });
-            $(this).off('inview');
-        }
-    });
-
-    // Google Map toggle
-    var $map = $('.google-map-container');
-    var $toggleButton = $('#mapToggle');
-    // Hide the map
-
-    $map.hide();
-
-    // we need to load the map once
-    // with this variable 
-    // we will keep track of that
-    var isMapLoaded = false;
-
-    // Show and Toggle It
-    $toggleButton.click(function() {
-        $map.slideToggle({
-            complete: function() {
-                // if map is not loaded
-                if (!isMapLoaded) {
-                    // first load the map
-
-                    // Google Map Options
-                    var map;
-
-                    map = new GMaps({
-                        el: '#gmap-wrapper',
-                        lat: 22.3590557, //Replace Here Location Google Map Lat
-                        lng: 91.8213111, //Replace Here Location Google Map Lng
-                        scrollwheel: false,
-                        zoom: 17,
-                        zoomControl: true,
-                        panControl: true,
-                        streetViewControl: true,
-                        mapTypeControl: false,
-                        overviewMapControl: false,
-                        clickable: true
-                    });
-
-                    var image = '';
-                    map.addMarker({
-                        lat: 22.3590557, //Replace Here Location Google Map Lat
-                        lng: 91.8213111, //Replace Here Location Google Map Lat
-                        icon: image,
-                        animation: google.maps.Animation.DROP,
-                        verticalAlign: 'bottom',
-                        horizontalAlign: 'center',
-                        backgroundColor: '#d9d9d9',
-                    });
-
-
-                    var styles = [
-
-                        {
-                            "featureType": "road",
-                            "stylers": [{
-                                "color": "#ffffff"
-                            }]
-                        }, {
-                            "featureType": "water",
-                            "stylers": [{
-                                "color": "#99b3cc"
-                            }]
-                        }, {
-                            "featureType": "landscape",
-                            "stylers": [{
-                                "color": "#f2efe9"
-                            }]
-                        }, {
-                            "elementType": "labels.text.fill",
-                            "stylers": [{
-                                "color": "#d3cfcf"
-                            }]
-                        }, {
-                            "featureType": "poi",
-                            "stylers": [{
-                                "color": "#bfbfbf"
-                            }]
-                        }, {
-                            "elementType": "labels.text",
-                            "stylers": [{
-                                "saturation": 1
-                            }, {
-                                "weight": 0.1
-                            }, {
-                                "color": "#000000"
-                            }]
-                        }
-
-                    ];
-
-                    map.addStyle({
-                        styledMapName: "Styled Map",
-                        styles: styles,
-                        mapTypeId: "map_style"
-                    });
-
-                    map.setStyle("map_style");
-
-                    // then make that variable true
-                    isMapLoaded = true;
-                }
-            }
-        });
-    });
-
-
-});
